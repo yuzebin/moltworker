@@ -22,4 +22,6 @@ jobs:
       - name: Deploy to Cloudflare
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: npx wrangler deploy
+        run: |
+          echo "CLOUDFLARE_API_TOKEN is set"
+          npx wrangler deploy --token ${{ secrets.CLOUDFLARE_API_TOKEN }}
