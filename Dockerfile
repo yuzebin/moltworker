@@ -1,8 +1,26 @@
-FROM node:22-slim
+FROM debian:bookworm-slim
 
-# Install dependencies
-RUN apt-get update && apt-get install -y xz-utils ca-certificates rsync curl \
+# Install Node.js 22 and dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    xz-utils \
+    ca-certificates \
+    rsync \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 22
+ENV NODE_VERSION=22.13.1
+RUN ARCH="$(dpkg --print-architecture)" \
+    && case "${ARCH}" in \
+         amd64) NODE_ARCH="x64" ;; \
+         arm64) NODE_ARCH="arm64" ;; \
+         *) echo "Unsupported architecture: ${ARCH}" >&2; exit 1 ;; \
+       esac \
+    && curl -fsSL https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz -o /tmp/node.tar.xz \
+    && tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 \
+    && rm /tmp/node.tar.xz \
+    && node --version \
+    && npm --version
 
 # Install pnpm globally
 RUN npm install -g pnpm
