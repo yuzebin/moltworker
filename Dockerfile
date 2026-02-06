@@ -1,4 +1,4 @@
-FROM docker.io/cloudflare/sandbox:0.7.0
+FROM cloudflare/sandbox:latest
 
 # Install Node.js 22 (required by clawdbot) and rsync (for R2 backup sync)
 # The base image has Node 20, we need to replace it with Node 22
